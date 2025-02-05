@@ -4,7 +4,7 @@ import { randBetween, randID, randInt } from '~/rand';
 
 export function Welcome() {
   const z = useZero<Schema>();
-  const all = z.query.message;
+  const all = z.query.message.orderBy('timestamp', 'desc');
   const [allMessages] = useQuery(all);
 
   const [users] = useQuery(z.query.user);
@@ -20,7 +20,7 @@ export function Welcome() {
   };
 
   return (
-    <main className=' items-center justify-center pt-16 pb-4'>
+    <main className='items-center justify-center pt-16 pb-4'>
       <button onClick={handleAddAction}>Add</button>
       <hr />
       <pre>{JSON.stringify(allMessages, null, 2)}</pre>
@@ -54,7 +54,7 @@ function randomMessage(
 ): Message {
   const id = randID();
   const mediumID = mediums[randInt(mediums.length)].id;
-  const timestamp = randBetween(1727395200000, new Date().getTime());
+  const timestamp = new Date().getTime();
   const isRequest = randInt(10) <= 6;
   const messages = isRequest ? requests : replies;
   const senders = users.filter((u) => u.partner === !isRequest);
