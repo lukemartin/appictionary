@@ -6,10 +6,6 @@ import { Zero } from '@rocicorp/zero';
 import { schema } from '../db/schema';
 import { ZeroProvider } from '@rocicorp/zero/react';
 
-const encodedJWT = Cookies.get('jwt');
-const decodedJWT = encodedJWT && decodeJwt(encodedJWT);
-const userID = decodedJWT?.sub ? (decodedJWT.sub as string) : 'anon';
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: 'New React Router App' },
@@ -18,6 +14,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  //   const encodedJWT = Cookies.get('jwt');
+  const encodedJWT = window.localStorage.getItem('jwt');
+  console.log('encodedJWT: ', encodedJWT);
+  const decodedJWT = encodedJWT && decodeJwt(encodedJWT);
+  const userID = decodedJWT?.sub ? (decodedJWT.sub as string) : 'anon';
+
   const z = new Zero({
     userID,
     auth: () => encodedJWT,
