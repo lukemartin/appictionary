@@ -1,5 +1,5 @@
 services:
-  zstart_postgres:
+  appictionary_postgres:
     image: postgres:16.2-alpine
     shm_size: 1g
     user: postgres
@@ -10,22 +10,22 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - 5430:5432
+      - 5429:5432
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: password
     command: |
-      postgres 
+      postgres
       -c wal_level=logical
-      -c max_wal_senders=10 
-      -c max_replication_slots=5 
-      -c hot_standby=on 
+      -c max_wal_senders=10
+      -c max_replication_slots=5
+      -c hot_standby=on
       -c hot_standby_feedback=on
     volumes:
-      - zstart_pgdata:/var/lib/postgresql/data
+      - appictionary_pgdata:/var/lib/postgresql/data
       - ./:/docker-entrypoint-initdb.d
 
 volumes:
-  zstart_pgdata:
+  appictionary_pgdata:
     driver: local
