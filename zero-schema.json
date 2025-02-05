@@ -3,8 +3,8 @@
   "schema": {
     "version": 1,
     "tables": {
-      "user": {
-        "name": "user",
+      "player": {
+        "name": "player",
         "columns": {
           "id": {
             "type": "string",
@@ -16,8 +16,98 @@
             "optional": false,
             "customType": null
           },
-          "partner": {
-            "type": "boolean",
+          "image": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
+      },
+      "game": {
+        "name": "game",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "winner_id": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "status": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "date_started": {
+            "type": "number",
+            "optional": false,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
+      },
+      "game_player": {
+        "name": "game_player",
+        "columns": {
+          "game_id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "player_id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "game_id",
+          "player_id"
+        ]
+      },
+      "round": {
+        "name": "round",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "game_id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "status": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "artist_id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "winner_id": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "answer": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "drawing": {
+            "type": "string",
             "optional": false,
             "customType": null
           }
@@ -27,6 +117,117 @@
         ]
       }
     },
-    "relationships": {}
+    "relationships": {
+      "game": {
+        "players": [
+          {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "game_id"
+            ],
+            "destSchema": "game_player",
+            "cardinality": "many"
+          },
+          {
+            "sourceField": [
+              "player_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "player",
+            "cardinality": "many"
+          }
+        ],
+        "winner": [
+          {
+            "sourceField": [
+              "winner_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "player",
+            "cardinality": "one"
+          }
+        ],
+        "rounds": [
+          {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "game_id"
+            ],
+            "destSchema": "round",
+            "cardinality": "many"
+          }
+        ]
+      },
+      "round": {
+        "game": [
+          {
+            "sourceField": [
+              "game_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "game",
+            "cardinality": "one"
+          }
+        ],
+        "winner": [
+          {
+            "sourceField": [
+              "winner_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "player",
+            "cardinality": "one"
+          }
+        ],
+        "artist": [
+          {
+            "sourceField": [
+              "artist_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "player",
+            "cardinality": "one"
+          }
+        ]
+      },
+      "player": {
+        "games": [
+          {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "player_id"
+            ],
+            "destSchema": "game_player",
+            "cardinality": "many"
+          },
+          {
+            "sourceField": [
+              "game_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "game",
+            "cardinality": "many"
+          }
+        ]
+      }
+    }
   }
 }
