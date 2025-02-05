@@ -25,7 +25,7 @@ export default function Home() {
     schema,
     // This is often easier to develop with if you're frequently changing
     // the schema. Switch to 'idb' for local-persistence.
-    kvStore: 'idb',
+    kvStore: import.meta.env.PROD ? 'idb' : 'mem',
   });
   return (
     <ZeroProvider zero={z}>
