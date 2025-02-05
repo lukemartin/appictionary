@@ -5,6 +5,10 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
+    "dev:zero-cache": "zero-cache-dev -p app/db/schema.ts",
+    "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
+    "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
+    "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
