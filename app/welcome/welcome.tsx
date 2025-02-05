@@ -68,7 +68,7 @@ export function Welcome() {
     if (allMessages.length === 0) {
       return false;
     }
-    const index = 0;
+    const index = allMessages.length - 1;
     z.mutate.message.delete({ id: allMessages[index].id });
 
     return true;
