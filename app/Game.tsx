@@ -1,7 +1,7 @@
 import { useQuery, useZero } from '@rocicorp/zero/react';
 import type { Schema } from '~/db/schema';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const Game = () => {
   const z = useZero<Schema>();
@@ -27,7 +27,73 @@ export const Game = () => {
 
   const [guess, setGuess] = useState('');
 
-  console.log({ game, round });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      const canDraw =
+        window.localStorage.getItem('player') === round?.artist_id;
+
+      const ctx = canvasRef.current.getContext('2d')!;
+
+      let drawing = false;
+      let points = [];
+      let prevX = undefined;
+      let prevY = undefined;
+      let currX = 0;
+      let currY = 0;
+
+      const mouseDown = () => {
+        drawing = true;
+      };
+
+      const mouseUp = () => {
+        drawing = false;
+        prevX = undefined;
+        prevY = undefined;
+        currX = 0;
+        currY = 0;
+      };
+
+      function draw(event: MouseEvent) {
+        if (!drawing) return;
+
+        prevX = currX;
+        prevY = currY;
+
+        currX = event.clientX - (canvasRef.current?.offsetLeft || 0);
+        currY = event.clientY - (canvasRef.current?.offsetTop || 0);
+
+        points.push({ x: currX, y: currY });
+
+        ctx.beginPath();
+        ctx.moveTo(prevX || currX, prevY || currY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.closePath();
+
+        if (canDraw && round) {
+          z.mutate.round.update({
+            id: round.id,
+            drawing: canvasRef.current?.toDataURL() || '',
+          });
+        }
+      }
+
+      canvasRef.current.addEventListener('mousedown', mouseDown);
+      canvasRef.current.addEventListener('mouseup', mouseUp);
+      canvasRef.current.addEventListener('mousemove', draw);
+    }
+
+    return () => {
+      if (canvasRef.current) {
+      }
+    };
+  }, [round?.id]);
+
+  //   console.log({ game, round });
   return (
     <div>
       <h1>Game</h1>
@@ -87,7 +153,7 @@ export const Game = () => {
         game.status === 'in progress' &&
         round.status === 'in progress' &&
         !game.winner_id && (
-          <>
+          <div key={round.id}>
             <h2>New round. Word = {round.answer}</h2>
 
             {round.artist && <h3>Artist: {round.artist.name}</h3>}
@@ -140,7 +206,26 @@ export const Game = () => {
                   </li>
                 ))}
             </ul>
-          </>
+
+            {localStorage.getItem('player') === round.artist_id ? (
+              <canvas
+                ref={canvasRef}
+                id='canvas'
+                className='bg-white'
+                width='300'
+                height='300'
+              ></canvas>
+            ) : (
+              round.drawing && (
+                <img
+                  width='300'
+                  height='300'
+                  src={round.drawing}
+                  className='bg-white'
+                />
+              )
+            )}
+          </div>
         )}
 
       {game && game.status === 'in progress' && game.winner_id && (
