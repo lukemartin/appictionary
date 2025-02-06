@@ -305,15 +305,15 @@ export const Game = () => {
         )}
         style={{ viewTransitionName: 'game-players' }}
       >
-        <ul className='flex gap-4 flex-wrap items-end justify-center'>
+        <ul className='flex  flex-wrap items-end justify-center'>
           {players
             // .filter((p) => !game?.players.find((g) => g.id === p.id))
             .reverse()
             .map((player) => (
               <li
                 key={player.id}
-                className={clsx('relative', {
-                  'sr-only opacity-0': availablePlayers.find(
+                className={clsx('relative mr-4', {
+                  'sr-only opacity-0 !mr-0': availablePlayers.find(
                     (g) => g === player.id
                   ),
                 })}
