@@ -134,6 +134,26 @@ export const Game = () => {
     t(() => setAvailablePlayers(aps.split(';')));
   }, [aps]);
 
+  const completeRound = () => {
+    if (round) {
+      z.mutate.round.update({
+        id: round.id,
+        status: 'complete',
+      });
+    }
+
+    if (game && game.rounds.length < game.players.length) {
+      z.mutate.round.insert({
+        id: nanoid(),
+        artist_id: game.players[game.rounds.length].id,
+        game_id: game.id,
+        status: 'in progress',
+        answer: randomAnswer(),
+        drawing: '',
+      });
+    }
+  };
+
   return (
     <div className='relative'>
       <header
@@ -226,6 +246,10 @@ export const Game = () => {
                   }
 
                   setGuess('');
+
+                  setTimeout(() => {
+                    completeRound();
+                  }, 5000);
                 }}
               >
                 <input
@@ -510,23 +534,7 @@ export const Game = () => {
             className='disabled:opacity-20'
             disabled={!round?.winner_id}
             onClick={() => {
-              if (round) {
-                z.mutate.round.update({
-                  id: round.id,
-                  status: 'complete',
-                });
-              }
-
-              if (game && game.rounds.length < game.players.length) {
-                z.mutate.round.insert({
-                  id: nanoid(),
-                  artist_id: game.players[game.rounds.length].id,
-                  game_id: game.id,
-                  status: 'in progress',
-                  answer: randomAnswer(),
-                  drawing: '',
-                });
-              }
+              completeRound();
             }}
           >
             Complete round
