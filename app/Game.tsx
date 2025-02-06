@@ -302,37 +302,50 @@ export const Game = () => {
           </button>
 
           {game && game.rounds.length === game.players.length && (
-            <button
-              onClick={() => {
-                const winners = game.rounds.reduce((acc, r) => {
-                  if (r.winner_id) {
-                    acc[r.winner_id] = acc[r.winner_id]
-                      ? acc[r.winner_id] + 1
-                      : 1;
-                  }
-
-                  return acc;
-                }, {} as Record<string, number>);
-
-                const winner = Object.entries(winners).reduce(
-                  (acc, cur) => {
-                    if (cur[1] > acc[1]) {
-                      return cur;
+            <>
+              <button
+                onClick={() => {
+                  const winners = game.rounds.reduce((acc, r) => {
+                    if (r.winner_id) {
+                      acc[r.winner_id] = acc[r.winner_id]
+                        ? acc[r.winner_id] + 1
+                        : 1;
                     }
 
                     return acc;
-                  },
-                  ['', 0] as [string, number]
-                )[0];
+                  }, {} as Record<string, number>);
 
-                z.mutate.game.update({
-                  id: game.id,
-                  winner_id: winner,
-                });
-              }}
-            >
-              Complete game
-            </button>
+                  const winner = Object.entries(winners).reduce(
+                    (acc, cur) => {
+                      if (cur[1] > acc[1]) {
+                        return cur;
+                      }
+
+                      return acc;
+                    },
+                    ['', 0] as [string, number]
+                  )[0];
+
+                  z.mutate.game.update({
+                    id: game.id,
+                    winner_id: winner || null,
+                  });
+                }}
+              >
+                Complete game
+              </button>
+              <button
+                onClick={() => {
+                  game &&
+                    z.mutate.game.update({
+                      id: game.id,
+                      status: 'complete',
+                    });
+                }}
+              >
+                End game
+              </button>
+            </>
           )}
         </div>
       )}
