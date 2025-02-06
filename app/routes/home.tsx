@@ -5,10 +5,7 @@ import { ZeroProvider } from '@rocicorp/zero/react';
 import { Game } from '~/Game';
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
-  ];
+  return [{ title: '✏️ appicationary' }];
 }
 
 export default function Home() {
