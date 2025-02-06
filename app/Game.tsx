@@ -102,6 +102,7 @@ export const Game = () => {
   }, [round?.artist_id]);
 
   const [s, setS] = useState('');
+  console.log('s: ', s);
   const state = useMemo(() => {
     if (!game) return 'loading';
 
@@ -155,7 +156,7 @@ export const Game = () => {
   };
 
   return (
-    <div className='relative'>
+    <div className='relative overflow-hidden'>
       <header
         style={{ viewTransitionName: 'header' }}
         className={clsx(
@@ -322,9 +323,9 @@ export const Game = () => {
         className={clsx(
           ' flex flex-col gap-10 absolute bottom-0 left-1/2 -translate-x-1/2 width-full',
           {
-            'opacity-0 pointer-events-none translate-y-full h-0':
+            'opacity-0 pointer-events-none translate-y-full !h-0':
               s === 'loading',
-            'opacity-100': s !== 'choosing',
+            'opacity-100': s !== 'choosing' && s !== 'loading',
           }
         )}
         style={{ viewTransitionName: 'game-players' }}
