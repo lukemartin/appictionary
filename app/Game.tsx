@@ -2,6 +2,7 @@ import { useQuery, useZero } from '@rocicorp/zero/react';
 import type { Schema } from '~/db/schema';
 import { nanoid } from 'nanoid';
 import { useEffect, useRef, useState } from 'react';
+import { randomAnswer } from '~/utils';
 
 export const Game = () => {
   const z = useZero<Schema>();
@@ -184,7 +185,10 @@ export const Game = () => {
                           onSubmit={(e) => {
                             e.preventDefault();
 
-                            if (guess === round.answer) {
+                            if (
+                              guess.toLocaleLowerCase() ===
+                              round.answer.toLocaleLowerCase()
+                            ) {
                               z.mutate.round.update({
                                 id: round.id,
                                 winner_id: player.id,
@@ -266,7 +270,7 @@ export const Game = () => {
                   artist_id: game.players[game.rounds.length].id,
                   game_id: game.id,
                   status: 'in progress',
-                  answer: 'cake',
+                  answer: randomAnswer(),
                   drawing: '',
                 });
               }
@@ -292,7 +296,7 @@ export const Game = () => {
                   artist_id: game.players[game.rounds.length].id,
                   game_id: game.id,
                   status: 'in progress',
-                  answer: 'dogs',
+                  answer: randomAnswer(),
                   drawing: '',
                 });
               }
