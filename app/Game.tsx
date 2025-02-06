@@ -171,7 +171,7 @@ export const Game = () => {
       {s === 'complete' && (
         <>
           <div className='top-1/2 absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl'>
-            finished! 🎉
+            🎉
           </div>
           <Confetti
             style={{ zIndex: 9999, position: 'fixed', inset: 0 }}
@@ -282,7 +282,6 @@ export const Game = () => {
                   }
                 }}
               >
-                {/* {player.name} */}
                 {player.image && (
                   <img
                     src={player.image}
@@ -331,7 +330,10 @@ export const Game = () => {
                 }}
               >
                 <span className='absolute bottom-0 right-0 py-1 px-3 font-bold bg-blue text-lg'>
-                  {game?.rounds.filter((r) => r.winner_id === player.id).length}
+                  {round?.artist_id === player.id
+                    ? '✏️'
+                    : game?.rounds.filter((r) => r.winner_id === player.id)
+                        .length}
                 </span>
                 {player.image && (
                   <img
