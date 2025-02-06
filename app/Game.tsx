@@ -247,10 +247,6 @@ export const Game = () => {
                   }
 
                   setGuess('');
-
-                  setTimeout(() => {
-                    completeRound();
-                  }, 5000);
                 }}
               >
                 <input
