@@ -598,6 +598,7 @@ const t = (cb: () => unknown) => {
   //   return cb();
   if (!document.startViewTransition) {
     cb();
+    return;
   }
 
   document.startViewTransition(cb);
